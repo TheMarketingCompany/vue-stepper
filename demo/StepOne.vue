@@ -1,25 +1,16 @@
 <template>
     <div style="padding: 2rem 3rem; text-align: left;">
-        <div class="field">
-            <label class="label">Username</label>
-            <div class="control">
-                <input :class="['input', ($v.form.username.$error) ? 'is-danger' : '']" type="text" placeholder="Text input"
-                       v-model="form.username">
-            </div>
-            <p v-if="$v.form.username.$error" class="help is-danger">This username is invalid</p>
+        <div class="answer1" @click="userMadeSelection(1)">
+            Antwort 1
         </div>
-        <div class="field">
-            <label class="label">Email</label>
-            <div class="control">
-                <input :class="['input', ($v.form.demoEmail.$error) ? 'is-danger' : '']"  type="text" placeholder="Email input" v-model="form.demoEmail">
-            </div>
-            <p v-if="$v.form.demoEmail.$error" class="help is-danger">This email is invalid</p>
+        <div class="answer2" @click="userMadeSelection(2)">
+            Antwort 2
         </div>
-        <div class="field">
-            <label class="label">Message</label>
-            <div class="control">
-                <textarea :class="['textarea', ($v.form.message.$error) ? 'is-danger' : '']"  placeholder="Textarea" v-model="form.message"></textarea>
-            </div>
+        <div class="answer3" @click="userMadeSelection(3)">
+            Antwort 3
+        </div>
+        <div class="answer4" @click="userMadeSelection(4)">
+            Antwort 4
         </div>
     </div>
 </template>
@@ -54,26 +45,11 @@
                 }
             }
         },
-        watch: {
-            $v: {
-                handler: function (val) {
-                    if(!val.$invalid) {
-                        this.$emit('can-continue', {value: true});
-                    } else {
-                        this.$emit('can-continue', {value: false});
-                        setTimeout(()=> {
-                            this.$emit('change-next', {nextBtnValue: false});
-                        }, 3000)
-                    }
-                },
-                deep: true
-            },
-
-            clickedNext(val) {
-                console.log(val);
-                if(val === true) {
-                    this.$v.form.$touch();
-                }
+        methods : {
+            userMadeSelection(answer) {
+                console.log("hello world " + answer);
+                this.$emit('can-continue', {value: true});
+                this.$parent.nextStep();
             }
         },
         mounted() {

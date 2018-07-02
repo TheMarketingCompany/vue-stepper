@@ -1,5 +1,21 @@
 <template>
     <div class="stepper-box">
+        <div class="content">
+            <transition :enter-active-class="enterAnimation" :leave-active-class="leaveAnimation" mode="out-in">
+                <!--If keep alive-->
+                <keep-alive v-if="keepAlive">
+                    <component :is="steps[currentStep.index].component" :clickedNext="nextButton[currentStep.name]" @can-continue="proceed" @change-next="changeNextBtnValue" :current-step="currentStep"></component>
+                </keep-alive>
+                <!--If not show component and destroy it in each step change-->
+                <component v-else :is="steps[currentStep.index].component" :clickedNext="nextButton[currentStep.name]" @can-continue="proceed" @change-next="changeNextBtnValue" :current-step="currentStep"></component>
+            </transition>
+        </div>
+        <div :class="['bottom', (currentStep.index > 0) ? '' : 'only-next']">
+            <div v-if="currentStep.index > 0" class="stepper-button previous" @click="backStep()">
+                <i class="material-icons">keyboard_arrow_left</i>
+                <span>{{ 'back' | translate(locale) }}</span>
+            </div>
+        </div>
         <div class="top">
             <div class="divider-line" :style="{width: `${(100/(steps.length) * (steps.length - 1)) - 10}%`}"></div>
             <div class="steps-wrapper">
@@ -24,26 +40,6 @@
                 <div v-if="topButtons" :class="['stepper-button-top next', !canContinue ? 'deactivated' : '']" @click="nextStep()">
                     <i class="material-icons">keyboard_arrow_right</i>
                 </div>
-            </div>
-        </div>
-        <div class="content">
-            <transition :enter-active-class="enterAnimation" :leave-active-class="leaveAnimation" mode="out-in">
-                <!--If keep alive-->
-                <keep-alive v-if="keepAlive">
-                    <component :is="steps[currentStep.index].component" :clickedNext="nextButton[currentStep.name]" @can-continue="proceed" @change-next="changeNextBtnValue" :current-step="currentStep"></component>
-                </keep-alive>
-                <!--If not show component and destroy it in each step change-->
-                <component v-else :is="steps[currentStep.index].component" :clickedNext="nextButton[currentStep.name]" @can-continue="proceed" @change-next="changeNextBtnValue" :current-step="currentStep"></component>
-            </transition>
-        </div>
-        <div :class="['bottom', (currentStep.index > 0) ? '' : 'only-next']">
-            <div v-if="currentStep.index > 0" class="stepper-button previous" @click="backStep()">
-                <i class="material-icons">keyboard_arrow_left</i>
-                <span>{{ 'back' | translate(locale) }}</span>
-            </div>
-            <div :class="['stepper-button next', !canContinue ? 'deactivated' : '']" @click="nextStep()">
-                <span>{{ (finalStep) ? 'finish' : 'next' | translate(locale) }}</span>
-                <i class="material-icons">keyboard_arrow_right</i>
             </div>
         </div>
     </div>
